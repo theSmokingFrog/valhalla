@@ -46,8 +46,8 @@ Viking.prototype.getActionPosition = function () {
         position.x = this.position.x + p.x;
         position.y = this.position.y + p.y;
 
-        position.x = position.x < 0 ? 0 : position.x > mapSizeX ? mapSizeX : position.x;
-        position.y = position.y < 0 ? 0 : position.y > mapSizeY ? mapSizeY : position.y;
+        position.x = position.x < 0 ? 0 : position.x >= mapSizeX ? mapSizeX : position.x;
+        position.y = position.y < 0 ? 0 : position.y >= mapSizeY ? mapSizeY : position.y;
 
     } else {
         throw new Error(this.id + 'position of order is invalid');
