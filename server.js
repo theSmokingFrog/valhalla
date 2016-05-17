@@ -267,6 +267,7 @@ let resetVikingsOrders = function() {
 
     vikingsList.forEach(function (viking) {
 
+        viking.action = {};
         viking.action.order = 'stop';
 
     });
