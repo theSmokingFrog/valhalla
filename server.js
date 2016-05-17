@@ -16,6 +16,7 @@ let port = 8080;
 var mapSizeX = 30;
 var mapSizeY = 30;
 
+app.use(express.static('client'));
 
 let Viking = require('./Viking.js');
 let vikingsList = [];
@@ -280,13 +281,8 @@ let gameUpdate = function () {
 
 };
 
-let gameInterval = setInterval(gameUpdate, 10000);
-
-io.on('connection', function(){
-    console.log('a user connected');
-});
+setInterval(gameUpdate, 10000);
 
 http.listen(port, function(){
     console.log('listening on '+ port);
 });
-
