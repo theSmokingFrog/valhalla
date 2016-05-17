@@ -37,4 +37,6 @@ Action position represents coordinate relative to your position.
 -  position:{x:-1,:y:0} - left
 
 GET /vikings
-Gives list of all vikings without respective ids - effectively the game map.
+Gives list of all Vikings without respective ids - effectively the game map.
+
+Socket io events are emitted for new Vikings and for game ticks.
