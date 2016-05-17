@@ -59,9 +59,11 @@ let findVikingsByOrder = function (order) {
 
     vikingsList.forEach(function (v) {
 
-        if (v.action.order === order) {
-            vikings.push(v);
-        }
+        try {
+            if (v.action.order === order) {
+                vikings.push(v);
+            }
+        } catch(e) {}
 
     });
 
