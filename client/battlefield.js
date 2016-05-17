@@ -11,6 +11,9 @@ var timePeriod = 1000;
 var vikingImg = new Image();
 vikingImg.src = 'viking.png';
 
+var grassImg = new Image();
+grassImg.src = 'grass.png';
+
 canvas.width = size;
 canvas.height = size;
 document.body.appendChild(canvas);
@@ -72,6 +75,12 @@ function main() {
     
     });
 
+}
+
+for (var i = 0; i < units; i++) {
+    for (var j = 0; j < units; j++) {
+        ctx.drawImage(grassImg, i * unitSize, j * unitSize, unitSize, unitSize);
+    }
 }
 
 main();
