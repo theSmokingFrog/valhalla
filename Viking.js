@@ -1,3 +1,5 @@
+'use strict';
+
 let shortid = require('shortid');
 
 let mapSizeX = 100;
