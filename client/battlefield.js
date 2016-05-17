@@ -26,6 +26,12 @@ function getVikings() {
 
 function renderVikings(vikings) {
 
+    for (var i = 0; i < units; i++) {
+        for (var j = 0; j < units; j++) {
+            ctx.drawImage(grassImg, i * unitSize, j * unitSize, unitSize, unitSize);
+        }
+    }
+
     vikings.forEach(function(viking) {
 
         var x = viking.position.x;
@@ -75,12 +81,6 @@ function main() {
     
     });
 
-}
-
-for (var i = 0; i < units; i++) {
-    for (var j = 0; j < units; j++) {
-        ctx.drawImage(grassImg, i * unitSize, j * unitSize, unitSize, unitSize);
-    }
 }
 
 main();

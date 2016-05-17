@@ -96,58 +96,77 @@ router.route('/vikings')
 
     .post(function (req, res) {
 
-        let viking = new Viking();
+        try {
 
-        let maxTries = 10;
-        let position = {x: getRandomInt(0,mapSizeX), y: getRandomInt(0,mapSizeY)};
+            let viking = new Viking();
 
-        while(findVikingByPosition(position) && maxTries--) {
-            position = {x: getRandomInt(0,mapSizeX), y: getRandomInt(0,mapSizeY)};
+            let maxTries = 10;
+            let position = {x: getRandomInt(0, mapSizeX), y: getRandomInt(0, mapSizeY)};
+
+            while (findVikingByPosition(position) && maxTries--) {
+                position = {x: getRandomInt(0, mapSizeX), y: getRandomInt(0, mapSizeY)};
+            }
+
+            if (maxTries === 0) {
+                res.json({error: 'could not find empty spot for you viking, please try again'});
+                return;
+            }
+
+            viking.position = position;
+
+            viking.name = req.body.name;
+
+            vikingsList.push(viking);
+
+            let sendWithId = true;
+            res.json(viking.parse(sendWithId));
+
+            io.sockets.emit('vikingsUpdate', {vikings: parseVikings()});
+
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({error:'invalid command'});
         }
-
-        if (maxTries === 0 ) {
-            res.json({error: 'could not find empty spot for you viking, please try again'});
-            return;
-        }
-
-        viking.position = position;
-
-        viking.name = req.body.name;
-
-        vikingsList.push(viking);
-
-        let sendWithId = true;
-        res.json(viking.parse(sendWithId));
-
-        io.sockets.emit('vikingsUpdate', {vikings: parseVikings()});
     })
 
     .put(function (req, res) {
 
-        let viking = findVikingById(req.body.id);
+        try {
 
-        if(!viking){
-            res.status(400).json({error:'deadViking'});
-            return;
+            let viking = findVikingById(req.body.id);
+
+            if(!viking){
+                res.status(400).json({error:'deadViking'});
+                return;
+            }
+
+            viking.action = req.body.action;
+
+            res.json(viking.parse());
+
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({error:'invalid command'});
         }
-
-        viking.action = req.body.action;
-
-        res.json(viking.parse());
     })
 
     .get(function (req, res) {
 
-        console.log('getting vikings');
+        try {
 
-        res.json({vikings: parseVikings()});
+            res.json({vikings: parseVikings()});
+
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({error:'invalid command'});
+        }
     });
 
 
 app.use('/api', router);
 app.use(function(err, req, res, next) {
     console.log(err);
-    // you suck
+    // does not work...
 });
 
 let handleVikingAttack = function (viking) {
