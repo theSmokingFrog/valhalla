@@ -39,6 +39,9 @@ Action position represents coordinate relative to your position.
 GET /vikings
 Gives list of all Vikings without respective ids - effectively the game map.
 
+GET /vikings/:id
+Get current state of viking
+
 Socket io events are emitted for new Vikings and for game ticks.
 
 # Server

@@ -321,7 +321,7 @@ let gameUpdate = function () {
 
 };
 
-setInterval(gameUpdate, 10000);
+setInterval(gameUpdate, 1000);
 
 http.listen(port, function(){
     console.log('listening on '+ port);
