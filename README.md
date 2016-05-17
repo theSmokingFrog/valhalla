@@ -45,7 +45,9 @@ Socket io events are emitted for new Vikings and for game ticks.
 Server IP: 52.58.199.76 PORT 8080
 
 GET http://52.58.199.76:8080/api/vikings
+
 POST http://52.58.199.76:8080/api/vikings
+
 PUT http://52.58.199.76:8080/api/vikings
 
 # Tips and tricks
