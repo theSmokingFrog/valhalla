@@ -2,6 +2,8 @@
 
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -112,6 +114,8 @@ router.route('/vikings')
 
         var sendWithId = true;
         res.json(viking.parse(sendWithId));
+
+        io.sockets.emit('vikingsUpdate', {vikings: parseVikings()});
     })
 
     .put(function (req, res) {
@@ -130,10 +134,6 @@ router.route('/vikings')
 
 
 app.use('/api', router);
-
-app.listen(port);
-console.log('Server starting on port: ' + port);
-
 
 var handleVikingAttack = function (viking) {
 
@@ -262,7 +262,17 @@ var gameUpdate = function () {
 
     resetVikingsOrders();
 
+    io.sockets.emit('vikingsUpdate', {vikings: parseVikings()});
 
 };
 
 var gameInterval = setInterval(gameUpdate, 10000);
+
+io.on('connection', function(){
+    console.log('a user connected');
+});
+
+http.listen(port, function(){
+    console.log('listening on '+ port);
+});
+
