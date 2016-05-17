@@ -2,8 +2,8 @@
 
 var shortid = require('shortid');
 
-var mapSizeX = 100;
-var mapSizeY = 100;
+var mapSizeX = 30;
+var mapSizeY = 30;
 
 function Viking() {
 

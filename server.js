@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
 
-var mapSizeX = 100;
-var mapSizeY = 100;
+var mapSizeX = 30;
+var mapSizeY = 30;
 
 var Viking = require('./Viking.js');
 var vikingsList = [];
@@ -130,6 +130,8 @@ router.route('/vikings')
     })
 
     .get(function (req, res) {
+
+        console.log('getting vikings');
 
         res.json({vikings: parseVikings()});
     });
