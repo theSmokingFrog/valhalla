@@ -1,6 +1,6 @@
 'use strict';
 
-var shortid = require('shortid');
+let shortid = require('shortid');
 
 var mapSizeX = 30;
 var mapSizeY = 30;
@@ -19,7 +19,7 @@ function Viking() {
 
 Viking.prototype.parse = function (withId) {
 
-    var vikingJSON = {
+    let vikingJSON = {
         name:     this.name,
         level:    this.level,
         health:   this.health,
@@ -37,9 +37,9 @@ Viking.prototype.parse = function (withId) {
 
 Viking.prototype.getActionPosition = function () {
 
-    var position = {};
+    let position = {};
 
-    var p = this.action.position;
+    let p = this.action.position;
 
     if (p.x >= -1 && p.x <= 1 && p.y >= -1 && p.y <= 1) {
 
@@ -60,9 +60,11 @@ Viking.prototype.getActionPosition = function () {
 Viking.prototype.checkForLevelUp = function () {
 
 
-    if (this.kills > Math.pow(2, this.level)) {
+    if (this.kills > Math.pow(2, this.level - 1)) {
 
         this.level += 1;
+        this.kills = 0;
+        this.increaseHitPoints(2);
 
     }
 
