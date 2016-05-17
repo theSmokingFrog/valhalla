@@ -124,6 +124,11 @@ router.route('/vikings')
 
         let viking = findVikingById(req.body.id);
 
+        if(!viking){
+            res.status(400).json({error:'deadViking'});
+            return;
+        }
+
         viking.action = req.body.action;
 
         res.json(viking.parse());
@@ -136,6 +141,10 @@ router.route('/vikings')
 
 
 app.use('/api', router);
+app.use(function(err, req, res, next) {
+    console.log(err);
+    // you suck
+});
 
 let handleVikingAttack = function (viking) {
 
