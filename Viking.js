@@ -2,29 +2,29 @@
 
 var shortid = require('shortid');
 
-var mapSizeX = 200;
-var mapSizeY = 200;
+var mapSizeX = 100;
+var mapSizeY = 100;
 
 function Viking() {
 
     this.id = shortid.generate();
+    this.name = 'Bob';
     this.level = 1;
     this.health = 2;
-    this.attack = 1;
     this.kills = 0;
-    this.action = {order:'stop'};
-    this.position = {x:0, y:0}; //todo: replace with map random position
+    this.action = {order: 'stop'};
+    this.position = {x: 0, y: 0};
 
 }
 
-Viking.prototype.parse = function(withId) {
+Viking.prototype.parse = function (withId) {
 
     var vikingJSON = {
-        level: this.level,
-        health: this.health,
-        attack: this.attack,
-        kills: this.kills,
-        action: this.action,
+        name:     this.name,
+        level:    this.level,
+        health:   this.health,
+        kills:    this.kills,
+        action:   this.action,
         position: this.position
     };
 
@@ -35,7 +35,7 @@ Viking.prototype.parse = function(withId) {
     return vikingJSON;
 };
 
-Viking.prototype.getActionPosition = function() {
+Viking.prototype.getActionPosition = function () {
 
     var position = {};
 
@@ -50,14 +50,36 @@ Viking.prototype.getActionPosition = function() {
         position.y = position.y < 0 ? 0 : position.y > mapSizeY ? mapSizeY : position.y;
 
     } else {
-        throw new Error(this.id+ 'position of order is invalid');
+        throw new Error(this.id + 'position of order is invalid');
     }
 
     return position;
 
 };
 
-Viking.prototype.isDead = function() {
+Viking.prototype.checkForLevelUp = function () {
+
+
+    if (this.kills > Math.pow(2, this.level)) {
+
+        this.level += 1;
+
+    }
+
+
+};
+
+Viking.prototype.increaseHitPoints = function (healthToAdd) {
+
+    this.health += healthToAdd;
+
+    if (this.health > this.level * 2) {
+
+        this.health = this.level * 2;
+    }
+};
+
+Viking.prototype.isDead = function () {
 
     return this.health <= 0;
 };

@@ -9,6 +9,9 @@ app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
 
+var mapSizeX = 100;
+var mapSizeY = 100;
+
 var Viking = require('./Viking.js');
 var vikingsList = [];
 
@@ -73,6 +76,10 @@ var parseVikings = function () {
     return parsedVikings;
 };
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 var router = express.Router();
 
 router.get('/', function (req, res) {
@@ -84,6 +91,22 @@ router.route('/vikings')
     .post(function (req, res) {
 
         var viking = new Viking();
+
+        var maxTries = 10;
+        var position = {x: getRandomInt(0,mapSizeX), y: getRandomInt(0,mapSizeY)};
+
+        while(findVikingByPosition(position) && maxTries--) {
+            position = {x: getRandomInt(0,mapSizeX), y: getRandomInt(0,mapSizeY)};
+        }
+
+        if (maxTries === 0 ) {
+            res.json({error: 'could not find empty spot for you viking, please try again'});
+            return;
+        }
+
+        viking.position = position;
+
+        viking.name = req.body.name;
 
         vikingsList.push(viking);
 
@@ -103,7 +126,6 @@ router.route('/vikings')
     .get(function (req, res) {
 
         res.json({vikings: parseVikings()});
-
     });
 
 
@@ -123,7 +145,7 @@ var handleVikingAttack = function (viking) {
 
         if (otherViking) {
 
-            otherViking.health -= viking.attack;
+            otherViking.health -= viking.level;
 
             if (otherViking.isDead()) {
                 viking.kills += 1;
@@ -141,12 +163,6 @@ var handleVikingMove = function (viking) {
 
     try {
 
-        if (viking.isDead()) {
-
-            throw new Error(viking.id + ' died in previous action');
-
-        }
-
         var movePosition = viking.getActionPosition();
 
         var otherViking = findVikingByPosition(movePosition);
@@ -157,6 +173,18 @@ var handleVikingMove = function (viking) {
         }
 
         viking.position = movePosition;
+
+    } catch (e) {
+        console.log(e);
+    }
+
+};
+
+var handleVikingHeal = function (viking) {
+
+    try {
+
+        viking.increaseHitPoints(Math.floor(viking.level/2));
 
     } catch (e) {
         console.log(e);
@@ -178,6 +206,26 @@ var disposeBodies = function() {
     }
 };
 
+var resetVikingsOrders = function() {
+
+    vikingsList.forEach(function (viking) {
+
+        viking.action.order = 'stop';
+
+    });
+
+};
+
+var levelUpVikings = function() {
+
+    vikingsList.forEach(function (viking) {
+
+        viking.checkForLevelUp();
+
+    });
+
+};
+
 var gameRound = 1;
 
 var gameUpdate = function () {
@@ -192,6 +240,10 @@ var gameUpdate = function () {
 
     });
 
+    disposeBodies();
+
+    levelUpVikings();
+
     vikings = findVikingsByOrder('move');
 
     vikings.forEach(function (viking) {
@@ -200,8 +252,16 @@ var gameUpdate = function () {
 
     });
 
+    vikings = findVikingsByOrder('heal');
 
-    disposeBodies();
+    vikings.forEach(function (viking) {
+
+        handleVikingHeal(viking);
+
+    });
+
+    resetVikingsOrders();
+
 
 };
 
