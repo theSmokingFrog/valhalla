@@ -47,3 +47,7 @@ Server IP: 52.58.199.76 PORT 8080
 GET http://52.58.199.76:8080/api/vikings
 POST http://52.58.199.76:8080/api/vikings
 PUT http://52.58.199.76:8080/api/vikings
+
+# Tips and tricks
+1. Use postman to test out the server before making the AI.
+2. Use restler npm package for easy http communication.
