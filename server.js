@@ -163,6 +163,27 @@ router.route('/vikings')
     });
 
 
+router.route('/vikings/:id')
+
+    .get(function (req, res) {
+
+        try {
+
+            let viking = findVikingById(req.params.id);
+
+            if(!viking){
+                res.status(400).json({error:'deadViking'});
+                return;
+            }
+
+            res.json(viking.parse(true));
+
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({error:'invalid command'});
+        }
+    });
+
 app.use('/api', router);
 app.use(function(err, req, res, next) {
     console.log(err);
