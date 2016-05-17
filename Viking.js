@@ -2,6 +2,9 @@
 
 var shortid = require('shortid');
 
+var mapSizeX = 200;
+var mapSizeY = 200;
+
 function Viking() {
 
     this.id = shortid.generate();
@@ -32,34 +35,31 @@ Viking.prototype.parse = function(withId) {
     return vikingJSON;
 };
 
-Viking.prototype.handleOrder = function() {
+Viking.prototype.getActionPosition = function() {
 
+    var position = {};
 
-};
+    var p = this.action.position;
 
-Viking.prototype.moveOrder = function() {
+    if (p.x >= -1 && p.x <= 1 && p.y >= -1 && p.y <= 1) {
 
+        position.x = this.position.x + p.x;
+        position.y = this.position.y + p.y;
 
-};
+        position.x = position.x < 0 ? 0 : position.x > mapSizeX ? mapSizeX : position.x;
+        position.y = position.y < 0 ? 0 : position.y > mapSizeY ? mapSizeY : position.y;
 
-Viking.prototype.attackOrder = function() {
+    } else {
+        throw new Error(this.id+ 'position of order is invalid');
+    }
 
-
-};
-
-Viking.prototype.healOrder = function() {
-
-
-};
-
-Viking.prototype.calculateDeath = function() {
-
+    return position;
 
 };
 
-Viking.prototype.calculateLevel = function() {
+Viking.prototype.isDead = function() {
 
-
+    return this.health <= 0;
 };
 
 module.exports = Viking;

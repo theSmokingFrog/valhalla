@@ -10,13 +10,13 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;
 
 var Viking = require('./Viking.js');
-var vikingsList= [];
+var vikingsList = [];
 
-var findViking = function(id) {
+var findVikingById = function (id) {
 
     var viking = null;
 
-    vikingsList.forEach(function(v){
+    vikingsList.forEach(function (v) {
 
         if (v.id === id) {
             viking = v;
@@ -24,15 +24,49 @@ var findViking = function(id) {
 
     });
 
+    return viking;
+
 };
 
-var parseVikings = function() {
+var findVikingByPosition = function (position) {
+
+    var viking = null;
+
+    vikingsList.forEach(function (v) {
+
+        if (v.position.x === position.x && v.position.y === position.y) {
+            viking = v;
+        }
+
+    });
+
+    return viking;
+
+};
+
+var findVikingsByOrder = function (order) {
+
+    var vikings = [];
+
+    vikingsList.forEach(function (v) {
+
+        if (v.action.order === order) {
+            vikings.push(v);
+        }
+
+    });
+
+    return vikings;
+
+};
+
+var parseVikings = function () {
 
     var parsedVikings = [];
 
-    vikingsList.forEach(function(v){
+    vikingsList.forEach(function (v) {
 
-        parsedVikings.push( v.parse() );
+        parsedVikings.push(v.parse());
 
     });
 
@@ -51,19 +85,19 @@ router.route('/vikings')
 
         var viking = new Viking();
 
-        vikingsList.push( viking );
+        vikingsList.push(viking);
 
         var sendWithId = true;
-        res.json( viking.parse(sendWithId) );
+        res.json(viking.parse(sendWithId));
     })
 
     .put(function (req, res) {
 
-        var viking = findViking(req.body.id);
+        var viking = findVikingById(req.body.id);
 
         viking.action = req.body.action;
 
-        res.json( viking.parse() );
+        res.json(viking.parse());
     })
 
     .get(function (req, res) {
@@ -79,7 +113,96 @@ app.listen(port);
 console.log('Server starting on port: ' + port);
 
 
+var handleVikingAttack = function (viking) {
+
+    try {
+
+        var attackPosition = viking.getActionPosition();
+
+        var otherViking = findVikingByPosition(attackPosition);
+
+        if (otherViking) {
+
+            otherViking.health -= viking.attack;
+
+            if (otherViking.isDead()) {
+                viking.kills += 1;
+            }
+
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+
+};
+
+var handleVikingMove = function (viking) {
+
+    try {
+
+        if (viking.isDead()) {
+
+            throw new Error(viking.id + ' died in previous action');
+
+        }
+
+        var movePosition = viking.getActionPosition();
+
+        var otherViking = findVikingByPosition(movePosition);
+
+        if (otherViking) {
+
+            throw new Error(viking.id + ' something is in my way');
+        }
+
+        viking.position = movePosition;
+
+    } catch (e) {
+        console.log(e);
+    }
+
+};
+
+var disposeBodies = function() {
+
+    var i = vikingsList.length;
+
+    while (i--) {
+
+        var viking = vikingsList[i];
+
+        if (viking.isDead()) {
+            vikingsList.splice(i, 1);
+        }
+    }
+};
+
+var gameRound = 1;
+
+var gameUpdate = function () {
+
+    console.log('Game round '+ (gameRound++));
+
+    var vikings = findVikingsByOrder('attack');
+
+    vikings.forEach(function (viking) {
+
+        handleVikingAttack(viking);
+
+    });
+
+    vikings = findVikingsByOrder('move');
+
+    vikings.forEach(function (viking) {
+
+        handleVikingMove(viking);
+
+    });
 
 
+    disposeBodies();
 
+};
 
+var gameInterval = setInterval(gameUpdate, 10000);
