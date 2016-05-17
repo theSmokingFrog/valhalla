@@ -1,0 +1,24 @@
+{
+  "name": "valhalla",
+  "version": "1.0.0",
+  "description": "Program the mighty viking warriors of Valhalla",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Creosteanu/valhalla.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Creosteanu/valhalla/issues"
+  },
+  "homepage": "https://github.com/Creosteanu/valhalla#readme",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "shortid": "^2.2.6"
+  }
+}
