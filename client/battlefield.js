@@ -2,7 +2,7 @@
 var canvas = document.createElement('canvas');
 var ctx = canvas.getContext('2d');
 
-var units = 30;
+var units = 31;
 var unitSize = 20; // px
 var size = units * unitSize;
 
@@ -26,8 +26,8 @@ function getVikings() {
 
 function renderVikings(vikings) {
 
-    for (var i = 0; i < units; i++) {
-        for (var j = 0; j < units; j++) {
+    for (var i = 0; i <= units; i++) {
+        for (var j = 0; j <= units; j++) {
             ctx.drawImage(grassImg, i * unitSize, j * unitSize, unitSize, unitSize);
         }
     }
