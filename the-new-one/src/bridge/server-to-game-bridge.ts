@@ -1,6 +1,6 @@
 import { Game } from '../models/game';
-import { Viking } from '../models/viking';
 import { GameConfig } from '../config/game-config';
+import { Action } from '../models/action';
 
 export class ServerToGameBridge {
   private game: Game;
@@ -10,8 +10,7 @@ export class ServerToGameBridge {
   }
 
   public allVikings(request, response): void {
-    // TODO: Filter information; id should not be exposed!
-    response.send(this.game.vikings);
+    response.send(this.game.allVikings());
   }
 
   public singleViking(request, response): void {
@@ -28,19 +27,37 @@ export class ServerToGameBridge {
   public newViking(request, response): void {
     const body = request.body;
     if (body != null && body.name != null) {
-      const vikingToAdd = new Viking(body.name);
-      let maxPositionRetries: number = 10;
-
-      while (this.game.vikingByPosition(vikingToAdd.position) && maxPositionRetries--) {
-        console.log('reset called');
-        vikingToAdd.resetPosition();
-      }
-
-      this.game.vikings.push(vikingToAdd);
-      response.send(vikingToAdd);
+      const createdViking = this.game.createNewViking(body.name);
+      response.send(createdViking);
     } else {
       response.status(GameConfig.BAD_REQUEST_CODE).json({error: `Request body is incomplete! It should be {name:'someName'}!`});
     }
+  }
+
+  public updateAction(request, response): void {
+    const body = request.body;
+    if (this.isUpdateActionBodyValid(body)) {
+      const updatedViking = this.game.setActionForViking(body.id, body.action);
+      if (updatedViking) {
+        response.send(updatedViking);
+      } else {
+        response.status(GameConfig.BAD_REQUEST_CODE).json({error: `Viking with ID '${body.id}' was not found!`});
+      }
+    } else {
+      response.status(GameConfig.BAD_REQUEST_CODE).json({error: `Request body is incomplete or wrong! Take a look at the docs!`});
+    }
+  }
+
+  private isUpdateActionBodyValid(requestBody): boolean {
+    let isValid: boolean = false;
+    // Is everything necessary present?
+    if (requestBody != null && requestBody.id != null && requestBody.action != null) {
+      // Check if a valid action is supplied
+      if (Action.validate(requestBody.action)) {
+        isValid = true;
+      }
+    }
+    return isValid;
   }
 
   public startGame() {
