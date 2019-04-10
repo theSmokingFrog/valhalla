@@ -33,7 +33,45 @@ export class Viking {
     this.action = Action.stop();
   }
 
-  public resetPosition() {
+  public levelUp(): void {
+    if (this.kills > Math.pow(2, this.level - 1)) {
+      this.level += 1;
+      this.kills = 0;
+      this.heal();
+    }
+  }
+
+  public increaseHealth(): void {
+
+  }
+
+  public heal(): void {
+    if (this.health < this.maximumHealth) {
+      this.health = this.health + this.level;
+    }
+  }
+
+  public isDead(): boolean {
+    return this.health <= 0;
+  }
+
+  public get maximumHealth() {
+    return this.level * 2;
+  }
+
+  public respawnAtRandomPosition() {
     this.position = Position.randomWithinBoundaries();
+  }
+
+  public doNothing() {
+    this.action = Action.stop();
+  }
+
+  public move(otherViking: Viking) {
+    if (!otherViking) {
+      this.position.withRelative(this.action.position);
+    } else {
+      // nothing happens cause the field is blocked!
+    }
   }
 }
