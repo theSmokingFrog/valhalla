@@ -1,6 +1,5 @@
-import { Game } from '../models/game';
-import { GameConfig } from '../config/game-config';
-import { Action } from '../models/action';
+import { Action, Game } from '../models';
+import { GameConfig } from '../config';
 
 export class ServerToGameBridge {
   private game: Game;

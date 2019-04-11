@@ -1,4 +1,4 @@
-import { GameConfig } from '../config/game-config';
+import { GameConfig } from '../config';
 
 export class Position {
   public x: number;

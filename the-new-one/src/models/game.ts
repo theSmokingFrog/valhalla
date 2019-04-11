@@ -1,9 +1,9 @@
 import { Viking } from './viking';
-import { GameConfig } from '../config/game-config';
 import { Position } from './position';
 import { Action } from './action';
 import * as _ from 'lodash';
 import { Order } from './order';
+import { GameConfig } from '../config';
 
 export class Game {
   private gameStarted: boolean = false;
