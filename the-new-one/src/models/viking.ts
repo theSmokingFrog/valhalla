@@ -10,20 +10,6 @@ export class Viking {
   action: Action;
   position: Position;
 
-  // Example Viking 'Nils'
-  // {
-  // "name": "Nils",
-  // "level": 1,
-  // "health": 2,
-  // "kills": 0,
-  // "action": {
-  //   "order": "stop"
-  // },
-  // "position": {
-  //   "x": 7,
-  //   "y": 26
-  // }
-
   constructor(public name: string) {
     this.id = shortid.generate();
     this.level = 1;
@@ -41,13 +27,12 @@ export class Viking {
     }
   }
 
-  public increaseHealth(): void {
-
-  }
-
   public heal(): void {
     if (this.health < this.maximumHealth) {
       this.health = this.health + this.level;
+    }
+    if (this.health > this.maximumHealth) {
+      this.health = this.maximumHealth;
     }
   }
 
@@ -69,7 +54,7 @@ export class Viking {
 
   public move(otherViking: Viking) {
     if (!otherViking) {
-      this.position.withRelative(this.action.position);
+      this.position = this.position.withRelative(this.action.position);
     } else {
       // nothing happens cause the field is blocked!
     }

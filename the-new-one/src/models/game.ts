@@ -43,22 +43,22 @@ export class Game {
     // execute one action, there is no possibility to submit actions. You have to exactly hit the time window after
     // one round is finished until the beginng of the next
     // The Concept in the original implementation allowed quick algorithms the execution of multiple actions per round
-    const gamestate: Viking[] = this.allVikings();
+    // const gamestate: Viking[] = this.allVikings();
 
     // 1. Execute Order 'Attack'
     // 2. get rid of the dead Vikings
-    const deadVikingIds = gamestate.filter(viking => viking.isDead()).map(viking => viking.id);
-    _.remove(gamestate, (viking => deadVikingIds.some(id => id === viking.id)));
+    const deadVikingIds = this.vikings.filter(viking => viking.isDead()).map(viking => viking.id);
+    _.remove(this.vikings, (viking => deadVikingIds.some(id => id === viking.id)));
     // 3. Level up the remaining vikings
-    gamestate.forEach(viking => viking.levelUp());
+    this.vikings.forEach(viking => viking.levelUp());
     // 4. Execute Order 'Move'
-    gamestate.filter(viking => viking.action.order === Order.MOVE).forEach(viking => viking.move(this.vikingByRelativePosition(viking)));
+    this.vikings.filter(viking => viking.action.order === Order.MOVE).forEach(viking => viking.move(this.vikingByRelativePosition(viking)));
     // 5. Execute Order 'Heal'
-    gamestate.filter(viking => viking.action.order === Order.HEAL).forEach(viking => viking.heal());
+    this.vikings.filter(viking => viking.action.order === Order.HEAL).forEach(viking => viking.heal());
     // 6. Reset all Orders to 'Stop'
-    gamestate.forEach(viking => viking.doNothing());
+    this.vikings.forEach(viking => viking.doNothing());
 
-    this.vikings = gamestate;
+    // this.vikings = gamestate;
   }
 
   public setActionForViking(id: string, action: Action): Viking {
