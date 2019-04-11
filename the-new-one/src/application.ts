@@ -16,6 +16,8 @@ export class Application {
     this.application.use(bodyParser.json());
     this.application.use(cors());
 
+    this.application.use('/', express.static(__dirname + '/client'));
+
     this.application.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(SwaggerDefinition.get()));
 
     /**
