@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import { ServerToGameBridge } from './bridge/server-to-game-bridge';
 
@@ -11,6 +12,7 @@ export class Application {
 
     this.application.set('port', 8080);
     this.application.use(bodyParser.json());
+    this.application.use(cors());
 
     this.application.get('/', (req, res) => res.send(`yeah... I'm alive?`));
 
