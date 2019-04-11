@@ -9,8 +9,22 @@ export class ServerToGameBridge {
     this.game = new Game();
   }
 
+  private static isUpdateActionBodyValid(requestBody): boolean {
+    let isValid: boolean = false;
+    // Is everything necessary present?
+    if (requestBody != null && requestBody.id != null && requestBody.action != null) {
+      // Check if a valid action is supplied
+      if (Action.validate(requestBody.action)) {
+        isValid = true;
+      }
+    }
+    return isValid;
+  }
+
   public allVikings(request, response): void {
-    response.send(this.game.allVikings());
+    const copiedVikings = [...this.game.allVikings()];
+    copiedVikings.forEach(viking => delete viking.id);
+    response.send(copiedVikings);
   }
 
   public singleViking(request, response): void {
@@ -36,7 +50,7 @@ export class ServerToGameBridge {
 
   public updateAction(request, response): void {
     const body = request.body;
-    if (this.isUpdateActionBodyValid(body)) {
+    if (ServerToGameBridge.isUpdateActionBodyValid(body)) {
       const updatedViking = this.game.setActionForViking(body.id, body.action);
       if (updatedViking) {
         response.send(updatedViking);
@@ -46,18 +60,6 @@ export class ServerToGameBridge {
     } else {
       response.status(GameConfig.BAD_REQUEST_CODE).json({error: `Request body is incomplete or wrong! Take a look at the docs!`});
     }
-  }
-
-  private isUpdateActionBodyValid(requestBody): boolean {
-    let isValid: boolean = false;
-    // Is everything necessary present?
-    if (requestBody != null && requestBody.id != null && requestBody.action != null) {
-      // Check if a valid action is supplied
-      if (Action.validate(requestBody.action)) {
-        isValid = true;
-      }
-    }
-    return isValid;
   }
 
   public startGame() {

@@ -46,6 +46,7 @@ export class Game {
     // const gamestate: Viking[] = this.allVikings();
 
     // 1. Execute Order 'Attack'
+    this.vikings.filter(viking => viking.action.order === Order.ATTACK).forEach(viking => viking.attack(this.vikingByRelativePosition(viking)));
     // 2. get rid of the dead Vikings
     const deadVikingIds = this.vikings.filter(viking => viking.isDead()).map(viking => viking.id);
     _.remove(this.vikings, (viking => deadVikingIds.some(id => id === viking.id)));

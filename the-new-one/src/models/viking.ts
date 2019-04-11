@@ -59,4 +59,17 @@ export class Viking {
       // nothing happens cause the field is blocked!
     }
   }
+
+  public attack(targetViking: Viking) {
+    if (targetViking) {
+      targetViking.injure(this.level);
+      if (targetViking.isDead()) {
+        this.kills++;
+      }
+    }
+  }
+
+  public injure(level: number): void {
+    this.health = this.health - level;
+  }
 }
